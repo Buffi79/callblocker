@@ -27,7 +27,6 @@ import json
 
 g_debug = False
 
-
 def error(*objs):
   print("ERROR: ", *objs, file=sys.stderr)
   sys.exit(-1)
@@ -41,29 +40,56 @@ def fetch_url(url):
   data = urllib2.urlopen(url, timeout = 5)
   return data.read()
 
-def extract_callerName(name):
-  matchObj = re.match(r"<a.*>(.*)</a>", name)
-  if matchObj: name = matchObj.group(1)
-  matchObj = re.match(r"(.*)<span.*>(.*)</span>", name)
-  if matchObj: name = matchObj.group(1) + matchObj.group(2)
-  return name
 
-def lookup_number(number):
-  url = "http://tel.search.ch/api/?" + urllib.urlencode({"was":number})
-  content = fetch_url(url)
-  #debug(content)
-  soup = BeautifulSoup(content)
-  #debug(soup)
+def getStringElement(output, element):
+  if output.find(element) < 0:
+    return ""
+  idxNameStart = output.find(element) + len (element) + 1
+  idxNameEnd = output.index("/"+element, idxNameStart) -1
+  item = output[idxNameStart:idxNameEnd]
+  return str(item)
+  
+def doSearch(phonenr, onlyCompany, key):
+    suffix = "&lang?de"
+    if (onlyCompany):
+        suffix  = suffix + "privat=0"
+    url = "http://tel.search.ch/api/?was="+phonenr+"&key="+key+"&lang?de"
+    #logger.info (url)
+    outbin = fetch_url(url)
+	
+    #logger.info(outbin)
+    output = outbin.decode('utf-8')
+    return output  
 
-  callerName = ""
-  entries = soup.findAll("entry")
-  for entry in entries:
-    name = entry.title.contents[0]
-    if len(callerName) == 0:
-      callerName = unicode(name)
-    else:
-      callerName += "; " + unicode(name)
-  return callerName
+	
+def lookup_number(phonenr, key):
+  i = 0
+  onlyCompany = False
+  result = ""
+  while i <= 4:
+    a = str(phonenr)
+    #debug("NR:"+a)
+    b = a[0:12-i]
+    debug("try Nr:"+b)
+    if i > 0:
+      onlyCompany = True
+      
+    output = doSearch(b, onlyCompany, key)
+    anzResult = int(getStringElement(output,"openSearch:totalResults"))
+    #debug("Res:"+str(anzResult))      
+    if anzResult > 0:
+      result = result +" "+getStringElement(output, "tel:name")
+      result = result +" "+getStringElement(output,"tel:firstname")
+      result = result +" "+getStringElement(output,"tel:occupation")
+      result = result +" "+getStringElement(output,"tel:zip")
+      result = result +" "+getStringElement(output,"tel:city")
+      i = 10
+      #debug("query"+result)
+      return result
+
+    result = "?" + result  
+    i+=1
+  return result
 
 #
 # main
@@ -72,6 +98,7 @@ def main(argv):
   global g_debug
   parser = argparse.ArgumentParser(description="Online lookup via tel.search.ch")
   parser.add_argument("--number", help="number to be checked", required=True)
+  parser.add_argument("--password", help="api key", required=True)
   parser.add_argument('--debug', action='store_true')
   args = parser.parse_args()
   g_debug = args.debug
@@ -80,7 +107,7 @@ def main(argv):
   if not args.number.startswith("+41"):
     error("Not a valid Swiss number: " + args.number)
 
-  callerName = lookup_number(args.number)
+  callerName = lookup_number(args.number, args.password)
 
   # result in json format, if not found empty field
   result = {
