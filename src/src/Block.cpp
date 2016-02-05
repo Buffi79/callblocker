@@ -30,8 +30,8 @@ Block::Block(Settings* pSettings) {
   Logger::debug("Block::Block()...");
   m_pSettings = pSettings;
 
-  m_pWhitelists = new FileLists(SYSCONFDIR "/" PACKAGE_NAME "/whitelists");
-  m_pBlacklists = new FileLists(SYSCONFDIR "/" PACKAGE_NAME "/blacklists");
+  m_pWhitelists = new FileLists(SYSCONFDIR "/" PACKAGE_NAME "/configs/whitelists");
+  m_pBlacklists = new FileLists(SYSCONFDIR "/" PACKAGE_NAME "/configs/blacklists");
 }
 
 Block::~Block() {
@@ -189,7 +189,7 @@ bool Block::checkOnline(std::string prefix, std::string scriptBaseName, const st
     return false;
   }
 
-  std::string script = "/usr/share/callblocker/" + prefix + scriptBaseName + ".py";
+  std::string script = "/usr/callblocker/scripts/" + prefix + scriptBaseName + ".py";
   std::string parameters = "--number " + rNumber;
   std::vector<struct SettingOnlineCredential> creds = m_pSettings->getOnlineCredentials();
   for(size_t i = 0; i < creds.size(); i++) {

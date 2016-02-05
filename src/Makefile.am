@@ -23,4 +23,3 @@ callblockerd_SOURCES = \
   Phone.cpp SipPhone.cpp SipAccount.cpp AnalogPhone.cpp Modem.cpp
 
 AM_CPPFLAGS = -Wall -DSYSCONFDIR=\"${sysconfdir}\"
-

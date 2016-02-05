@@ -52,8 +52,8 @@ def getStringElement(output, element):
 def doSearch(phonenr, onlyCompany, key):
     suffix = "&lang?de"
     if (onlyCompany):
-        suffix  = suffix + "privat=0"
-    url = "http://tel.search.ch/api/?was="+phonenr+"&key="+key+"&lang?de"
+        suffix  = suffix + "&privat=0"
+    url = "http://tel.search.ch/api/?was="+phonenr+"&key="+key+suffix
     #logger.info (url)
     outbin = fetch_url(url)
 	
@@ -70,7 +70,7 @@ def lookup_number(phonenr, key):
     a = str(phonenr)
     #debug("NR:"+a)
     b = a[0:12-i]
-    debug("try Nr:"+b)
+    #debug("try Nr:"+b)
     if i > 0:
       onlyCompany = True
       
@@ -78,7 +78,7 @@ def lookup_number(phonenr, key):
     anzResult = int(getStringElement(output,"openSearch:totalResults"))
     #debug("Res:"+str(anzResult))      
     if anzResult > 0:
-      result = result +" "+getStringElement(output, "tel:name")
+      result = result +" "+getStringElement(output,"tel:name")
       result = result +" "+getStringElement(output,"tel:firstname")
       result = result +" "+getStringElement(output,"tel:occupation")
       result = result +" "+getStringElement(output,"tel:zip")
@@ -108,7 +108,8 @@ def main(argv):
     error("Not a valid Swiss number: " + args.number)
 
   callerName = lookup_number(args.number, args.password)
-
+  #callerName = "Hallo Welt"
+  debug("callername" + callerName)
   # result in json format, if not found empty field
   result = {
     "name"  : callerName
