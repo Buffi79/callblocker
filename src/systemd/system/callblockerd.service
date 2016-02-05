@@ -3,7 +3,7 @@ Description=callblocker
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/callblockerd
+ExecStart=/usr/callblocker/bin/callblockerd
 Restart=on-failure
 
 [Install]
