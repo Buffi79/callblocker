@@ -85,7 +85,7 @@ For additional information see [here](http://redmine.lighttpd.net/projects/light
 ## <a name="fileLayout"></a> File Layout
 When installed on Linux, the following file layout is used
 ```
-/etc/callblocker                           #homedirectory of callblocker
+/usr/callblocker                           #homedirectory of callblocker
                 /bin/callblockerd          # daemon
                 /configs                   # config-Files
                         /blacklists        # put your blacklists here
