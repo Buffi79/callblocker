@@ -38,17 +38,18 @@ Supported (tested) analog modems
 ```bash
 sudo apt-get install git automake g++ libpjproject-dev libjson-c-dev libboost-dev libboost-regex-dev 
 sudo apt-get install python python-beautifulsoup python-demjson python-ldap python-vobject
-git clone https://github.com/pamapa/callblocker.git
-cd callblocker
+cd /etc
+git clone https://github.com/buffi79/callblocker.git
+cd callblocker/src/
 aclocal
 automake --add-missing --foreign
 autoconf
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --prefix=/usr/callblocker/ --sysconfdir=/usr
 make all
 sudo make install
-cd /etc/callblocker
-sudo mv tpl_settings.json settings.json
-sudo vi settings.json
+cd /etc/callblocker/configs
+mv tpl_settings.json settings.json
+vi settings.json
 sudo systemctl start callblockerd.service
 ```
 
@@ -56,26 +57,26 @@ sudo systemctl start callblockerd.service
 ## <a name="webInterface"></a> Install web interface on a Raspberry Pi (running raspbian/jessie)
 ```bash
 sudo apt-get install lighttpd python-flup libjs-dojo-core libjs-dojo-dijit libjs-dojo-dojox
-sudo chgrp -R www-data /etc/callblocker/
+sudo chgrp -R www-data /usr/callblocker/www/
 sudo usermod -a -G systemd-journal www-data
-sudo chmod a+x /usr/var/www/callblocker/python-fcgi/api.py
+sudo chmod a+x /usr/callblocker/www/callblocker/python-fcgi/api.py
 sudo vi /etc/lighttpd/lighttpd.conf
 ```
 1. In the upper section of this file you can find the section 'server.modules='. Please add the module "mod_fastcgi".
-2. Make server.document-root point to "/usr/var/www/callblocker"
+2. Make server.document-root point to "/usr/callblocker/www/callblocker"
 3. At the end of this file add this code:
 ```section
 fastcgi.server              = (
         ".py" => (
                 "callblocker-fcgi" => (
-                        "bin-path" => "/usr/var/www/callblocker/python-fcgi/api.py",
+                        "bin-path" => "/usr/callblocker/www/callblocker/python-fcgi/api.py",
                         "socket" => "/var/run/lighttpd/fastcgi.python.socket")
         )
 )
 ```
 4. Make sure the python file fcgi_api.py has correct executable rights and restart lighttpd daemon.
 ```bash
-sudo chmod a+x /usr/var/www/callblocker/python-fcgi/api.py
+sudo chmod a+x /usr/callblocker/www/callblocker/python-fcgi/api.py
 sudo systemctl restart lighttpd.service
 ```
 For additional information see [here](http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs_ModFastCGI).
@@ -84,18 +85,18 @@ For additional information see [here](http://redmine.lighttpd.net/projects/light
 ## <a name="fileLayout"></a> File Layout
 When installed on Linux, the following file layout is used
 ```
-drwxr-xr-x  www-data www-data  /etc/callblocker               # configuration
--rw-r--r--  www-data www-data  /etc/callblocker/settings.json # configuration file
-drwxr-xr-x  www-data www-data  /etc/callblocker/blacklists    # put your blacklists here
-drwxr-xr-x  www-data www-data  /etc/callblocker/whitelists    # put your whitelists here
--rwxr-xr-x  root     root      /usr/bin/callblockerd          # daemon
-drwxr-xr-x  root     root      /usr/share/callblocker         # python helper scripts
-drwxr-xr-x  root     root      /usr/var/www/callblocker       # web interface
+/etc/callblocker                           #homedirectory of callblocker
+                /bin/callblockerd          # daemon
+                /configs                   # config-Files
+                        /blacklists        # put your blacklists here
+                        /whitelists        # put your whitelists here
+                /scripts                   # python helper scripts            
+                /www/callblocker           # web interface
+                /src                       # C++ Source callblockerdeamon
 ```
 
-
 ## <a name="settingsJson"></a> Configuration file
-The documentation of the configuration file "settings.json" is located [here](/etc/callblocker/README.md).
+The documentation of the configuration file "settings.json" is located [here](/configs/callblocker/README.md).
 
 
 ## Offline blacklists (automatically periodically downloading)
@@ -111,7 +112,7 @@ blacklist_ktipp_ch.py        | https://www.ktipp.ch       | Switzerland (+41)
 
 The following cronjob will download each day the blacklist provided by ktipp_ch:
 ```bash
-0 0 * * * /usr/share/callblocker/blacklist_ktipp_ch.py --output /etc/callblocker/blacklists/ >/dev/null 2>&1
+0 0 * * * /usr/callblocker/scripts/blacklist_ktipp_ch.py --output /usr/callblocker/configs/blacklists/ >/dev/null 2>&1
 ```
 
 
@@ -159,7 +160,7 @@ There are two ways to connect the call blocker application with your phone syste
 4. Increase log levels: "log_level" to "debug" and/or "pjsip_log_level" to 2. See documentation of
    [configuration file](#settingsJson) for more info.
    ```bash
-   sudo vi settings.json
+   vi settings.json
    ```
 
 ### Symptom: Web interface is not working.
@@ -174,7 +175,7 @@ sudo journalctl -xn _SYSTEMD_UNIT=lighttpd.service
 The web interface is running within lighttpd, this deamon is using "www-data" as user and group. Make
 sure that this process has access to the configuration file (see [file layout](#fileLayout)).
 ```bash
-sudo chgrp -R www-data /etc/callblocker/
+sudo chgrp -R www-data /usr/callblocker/www/
 ```
 
 ### Symptom: Caller log and diagnostics stay empty within the web interface.
