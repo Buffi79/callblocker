@@ -38,7 +38,7 @@ Supported (tested) analog modems
 ```bash
 sudo apt-get install git automake g++ libpjproject-dev libjson-c-dev libboost-dev libboost-regex-dev 
 sudo apt-get install python python-beautifulsoup python-demjson python-ldap python-vobject
-cd /etc
+cd /usr
 git clone https://github.com/buffi79/callblocker.git
 cd callblocker/src/
 aclocal
@@ -47,7 +47,7 @@ autoconf
 ./configure --prefix=/usr/callblocker/ --sysconfdir=/usr
 make all
 sudo make install
-cd /etc/callblocker/configs
+cd /usr/callblocker/configs
 mv tpl_settings.json settings.json
 vi settings.json
 sudo systemctl start callblockerd.service
@@ -85,7 +85,7 @@ For additional information see [here](http://redmine.lighttpd.net/projects/light
 ## <a name="fileLayout"></a> File Layout
 When installed on Linux, the following file layout is used
 ```
-/etc/callblocker                           #homedirectory of callblocker
+/usr/callblocker                           #homedirectory of callblocker
                 /bin/callblockerd          # daemon
                 /configs                   # config-Files
                         /blacklists        # put your blacklists here
@@ -128,7 +128,7 @@ There are two ways to connect the call blocker application with your phone syste
   - Choose "LAN/WLAN (IP-Telefon)", for name use for example "callblocker" and click "Weiter"
   - Choose a password, remember it and click "Weiter"
   - Choose "alle Anrufe annehmen" and click "Weiter"
-- Setup the IP-phone in the call blocker configuration (/etc/callblocker/setting.json):
+- Setup the IP-phone in the call blocker configuration (/usr/callblocker/configs/setting.json):
   - Edit the section sip -> accounts
   - "from_domain":   "fritz.box"
   - "from_username": "your username"
@@ -139,7 +139,7 @@ There are two ways to connect the call blocker application with your phone syste
 ### Setup using an analog phone
 - Attach the USB modem to the Raspberry Pi
 - Use `dmesg` to find the device name `/dev/<name>`
-- Setup the Analog phone in the call blocker configuration (/etc/callblocker/setting.json):
+- Setup the Analog phone in the call blocker configuration (/usr/callblocker/configs/setting.json):
   - Edit the section analog -> phones
   - "device": "your device name"
   - Make sure the account is enabled and the other fields ok ok for you
