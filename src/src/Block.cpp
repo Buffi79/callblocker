@@ -49,12 +49,31 @@ void Block::run() {
 }
 
 bool Block::isAnonymousNumberBlocked(const struct SettingBase* pSettings, std::string* pMsg) {
-  bool block = pSettings->blockAnonymousCID;
-
+  bool blockenabled = pSettings->blockAnonymousCID;
+  bool block = false;
+  
   // Incoming call number='anonymous' [blocked]
   std::ostringstream oss;
   oss << "Incoming call: number='anonymous'";
-  if (block) {
+  if (blockenabled) {
+    std::string script = "/usr/callblocker/scripts/anonymous.py";
+    std::string parameters = "--number anonymous";
+  
+    std::string res;
+    if (!Helper::executeCommand(script + " " + parameters + " 2>&1", &res)) {
+      return blockenabled; // script failed, error already logged
+    }
+    
+    struct json_object* root;
+	root = json_tokener_parse(res.c_str());
+	
+    if (!Helper::getObject(root, "block", true, "script result", &block)) {
+      return blockenabled;
+    }
+  }
+	
+  if (block)
+  {
     oss << " blocked";
   }
 

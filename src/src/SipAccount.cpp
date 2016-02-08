@@ -132,7 +132,7 @@ void SipAccount::onIncomingCall(pjsua_call_id call_id, pjsip_rx_data *rdata) {
 
   std::string msg;
   bool block = false;
-  if (number == "anonymous") {
+  if (number == "anonymous" or number == "") {
     block = m_pPhone->isAnonymousNumberBlocked(&m_settings.base, &msg);
   } else {
     block = m_pPhone->isNumberBlocked(&m_settings.base, number, &msg);

@@ -1,7 +1,6 @@
 # Process this file with automake to produce Makefile.in.
-# Makefile.am for hello/src.
-#
-# Copyright 1996, 1997, 2001, 2005, 2006, 2007, 2008 Free Software
+# 
+# Copyright 1997, 1998, 2005, 2006, 2007, 2008 Free Software
 # Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-bin_PROGRAMS = callblockerd
-callblockerd_SOURCES = \
-  Main.cpp Logger.cpp Notify.cpp FileLists.cpp FileList.cpp Helper.cpp Settings.cpp Block.cpp \
-  Phone.cpp SipPhone.cpp SipAccount.cpp AnalogPhone.cpp Modem.cpp
+# Subdirectories to descend into.
+SUBDIRS = src
 
-AM_CPPFLAGS = -Wall -DSYSCONFDIR=\"${sysconfdir}\"

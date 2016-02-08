@@ -87,6 +87,11 @@ def lookup_number(phonenr, key):
       #debug("query"+result)
       return result
 
+    #MobilePhones
+    debug("ziffer:"+a[3])
+    if int(a[3]) > 5 and int(a[3]) < 10:
+       return result
+
     result = "?" + result  
     i+=1
   return result
