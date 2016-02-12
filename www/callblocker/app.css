@@ -1,6 +1,6 @@
-@import "javascript/dojo/resources/dojo.css";
-@import "javascript/dijit/themes/soria/soria.css";
-@import "javascript/dojox/grid/resources/soriaGrid.css";
+@import "/javascript/dojo/resources/dojo.css";
+@import "/javascript/dijit/themes/soria/soria.css";
+@import "/javascript/dojox/grid/resources/soriaGrid.css";
 
 html, body {
   width: 100%;
@@ -8,6 +8,12 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+
+.soria {
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size: 1em;
 }
 
 .whitelistRow .dojoxGridCell {

@@ -23,7 +23,9 @@ import os, sys, argparse, re
 import urllib, urllib2
 from BeautifulSoup import BeautifulSoup
 import json
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 g_debug = False
 
@@ -47,8 +49,9 @@ def getStringElement(output, element):
   idxNameStart = output.find(element) + len (element) + 1
   idxNameEnd = output.index("/"+element, idxNameStart) -1
   item = output[idxNameStart:idxNameEnd]
+  #return str(item.encode('utf-8'))
   return str(item)
-  
+
 def doSearch(phonenr, onlyCompany, key):
     suffix = "&lang?de"
     if (onlyCompany):

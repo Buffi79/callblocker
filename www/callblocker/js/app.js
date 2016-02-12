@@ -51,7 +51,7 @@ require(["dijit/ConfirmDialog",
     if (dateStr) {
       dateStr = dateStr.replace(/-/g, "/");
       var date = new Date(dateStr); // RFC2822 or ISO 8601 date
-      return dojo.date.locale.format(date, {formatLength: "long"});
+      return dojo.date.locale.format(date, {formatLength: "medium"});
     }
     return "";
   }
@@ -69,13 +69,13 @@ require(["dijit/ConfirmDialog",
       url: api_base.concat("/callerlog")
     });
     var structure = [
-      { name: "Date",      field: "DATE",      width:"170px", formatter: formatDate},
-      { name: "Number",    field: "NUMBER",    width:"120px"},
-      { name: "Name",      field: "NAME",      width:"600px"},
-      { name: "Blocked",   field: "BLOCKED",   width:"120px", hidden:true},
-      { name: "Whitelist", field: "WHITELIST", width:"100px"},
-      { name: "Blacklist", field: "BLACKLIST", width:"100px"},
-      { name: "Score",     field: "SCORE",     width:"50px"}
+      { name: "Date",      field: "DATE",      width:"140px", formatter: formatDate},
+      { name: "Number",    field: "NUMBER",    width:"100px"},
+      { name: "Name",      field: "NAME",      width:"100%"},
+      { name: "Blocked",   field: "BLOCKED",   width:"100px", hidden:true},
+      { name: "Whitelist", field: "WHITELIST", width:"70px"},
+      { name: "Blacklist", field: "BLACKLIST", width:"70px"},
+      { name: "Score",     field: "SCORE",     width:"40px"}
     ];
 
     var menu = new dijit.Menu();
@@ -258,13 +258,13 @@ require(["dijit/ConfirmDialog",
 
     var phoneStore = createListStore(api_base.concat("/phones"));
     var structure = [
-      { name:"Enabled",             field:"enabled",             width:"40px",
+      { name:"Enabled",             field:"enabled",             width:"50px",
         type:dojox.grid.cells._Widget, formatter:function(on){
           return new dijit.form.CheckBox({checked: on, readOnly: true});
         }
       },
       { name:"Name",                field:"name",                width:"100px"},
-      { name:"Country code",        field:"country_code",        width:"40px"},
+      { name:"Country code",        field:"country_code",        width:"60px"},
       { name:"Block mode",          field:"block_mode",          width:"120px"},
       { name:"Block anonymous CID", field:"block_anonymous_cid", width:"60px",
         type:dojox.grid.cells._Widget, formatter:function(on){

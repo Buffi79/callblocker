@@ -18,6 +18,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 
-CALLBLOCKER_SYSCONFDIR = "/etc/callblocker"
-CALLBLOCKER_DATADIR    = "/usr/share/callblocker"
+CALLBLOCKER_SYSCONFDIR = "/usr/callblocker/configs"
+CALLBLOCKER_DATADIR    = "/usr/callblocker"
 
