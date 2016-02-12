@@ -61,18 +61,24 @@ sudo chgrp -R www-data /usr/callblocker/www/
 sudo usermod -a -G systemd-journal www-data
 sudo chmod a+x /usr/callblocker/www/callblocker/python-fcgi/api.py
 sudo vi /etc/lighttpd/lighttpd.conf
+sudo ln -s /usr/callblocker/www/callblocker/ /var/www/
 ```
 1. In the upper section of this file you can find the section 'server.modules='. Please add the module "mod_fastcgi".
-2. Make server.document-root point to "/usr/callblocker/www/callblocker"
-3. At the end of this file add this code:
+2. 
 ```section
-fastcgi.server              = (
+alias.url = (
+ "/javascript/" => "/usr/share/javascript/"
+)
+
+$HTTP["url"] =~ "^/callblocker($|/)" {
+  fastcgi.server              = (
         ".py" => (
                 "callblocker-fcgi" => (
                         "bin-path" => "/usr/callblocker/www/callblocker/python-fcgi/api.py",
                         "socket" => "/var/run/lighttpd/fastcgi.python.socket")
         )
-)
+  )
+}
 ```
 4. Make sure the python file fcgi_api.py has correct executable rights and restart lighttpd daemon.
 ```bash
