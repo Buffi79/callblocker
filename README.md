@@ -40,19 +40,22 @@ sudo apt-get install git automake g++ libpjproject-dev libjson-c-dev libboost-de
 sudo apt-get install python python-beautifulsoup python-demjson python-ldap python-vobject
 cd /usr
 git clone https://github.com/buffi79/callblocker.git
-cd callblocker/src/
+cd /usr/callblocker/configs
+mv tpl_settings.json settings.json
+vi settings.json
+sudo systemctl start callblockerd.service
+```
+## For source compilation
+```bash
+sudo apt-get install git automake g++ libpjproject-dev libjson-c-dev libboost-dev libboost-regex-dev 
+cd /usr/callblocker/src/
 aclocal
 automake --add-missing --foreign
 autoconf
 ./configure --prefix=/usr/callblocker/ --sysconfdir=/usr
 make all
 sudo make install
-cd /usr/callblocker/configs
-mv tpl_settings.json settings.json
-vi settings.json
-sudo systemctl start callblockerd.service
 ```
-
 
 ## <a name="webInterface"></a> Install web interface on a Raspberry Pi (running raspbian/jessie)
 ```bash
