@@ -44,6 +44,8 @@ cd /usr/callblocker/configs
 mv tpl_settings.json settings.json
 vi settings.json
 sudo systemctl start callblockerd.service
+
+sudo journalctl _SYSTEMD_UNIT=callblockerd.service
 ```
 ## For source compilation
 ```bash
@@ -87,6 +89,9 @@ $HTTP["url"] =~ "^/callblocker($|/)" {
 ```bash
 sudo chmod a+x /usr/callblocker/www/callblocker/python-fcgi/api.py
 sudo systemctl restart lighttpd.service
+
+sudo cat /var/log/lighttpd/error.log
+sudo journalctl -xn _SYSTEMD_UNIT=lighttpd.service
 ```
 For additional information see [here](http://redmine.lighttpd.net/projects/lighttpd/wiki/Docs_ModFastCGI).
 
