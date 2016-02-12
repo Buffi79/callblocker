@@ -36,7 +36,7 @@ Supported (tested) analog modems
 
 ## Install daemon on a Raspberry Pi (running raspbian/jessie)
 ```bash
-sudo apt-get install git automake g++ libpjproject-dev libjson-c-dev libboost-dev libboost-regex-dev 
+sudo apt-get install libboost-dev libboost-regex-dev
 sudo apt-get install python python-beautifulsoup python-demjson python-ldap python-vobject
 cd /usr
 git clone https://github.com/buffi79/callblocker.git
